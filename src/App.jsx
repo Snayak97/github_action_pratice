@@ -10,6 +10,7 @@ function App() {
   return (
     <>
       <h1>soumya</h1>
+      <h1>railway app manually deployed</h1>
     </>
   )
 }
