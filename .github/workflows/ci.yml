@@ -1,4 +1,34 @@
-name: React CI Pipeline
+# name: React CI Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     # steps:
+#     #   - name: Checkout Repository
+#     #     uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v4
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 22
+
+#       - name: Check Node Version
+#         run: node -v
+#       - name: Install Dependencies
+#         run: npm ci
+
+# # Soumya@08051997
+
+name: Deploy to Railway
 
 on:
   push:
@@ -6,25 +36,27 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
-    # steps:
-    #   - name: Checkout Repository
-    #     uses: actions/checkout@v4
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '20'
 
-      - name: Check Node Version
-        run: node -v
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: npm install
 
-# Soumya@08051997
+      - name: Build project
+        run: npm run build
 
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
